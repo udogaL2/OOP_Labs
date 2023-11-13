@@ -173,7 +173,8 @@ interface VirtualBoardIntervace
 
 function start(): void
 {
-	while (true) {
+	while (true)
+	{
 		$command = readline();
 
 		if ($command === 'exit')
