@@ -1,8 +1,8 @@
 <?php
 
-class VirtualBoard extends VirtualKeyList implements VirtualBoardIntervace
+class VirtualBoard extends VirtualKeyList implements VirtualBoardInterface
 {
-	public static function pressButton(string $button)
+	public static function pressButton(string $button): void
 	{
 		$method = 'getButton' . $button;
 
@@ -15,7 +15,7 @@ class VirtualBoard extends VirtualKeyList implements VirtualBoardIntervace
 		}
 	}
 
-	private static function press(string $command)
+	private static function press(string $command): void
 	{
 		echo $command . "\n";
 	}
@@ -165,7 +165,7 @@ class VirtualKeyList
 	}
 }
 
-interface VirtualBoardIntervace
+interface VirtualBoardInterface
 {
 	public static function pressButton(string $button);
 }
