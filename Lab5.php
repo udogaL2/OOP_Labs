@@ -130,7 +130,7 @@ class DataRepository implements DataRepositoryInterface
 	{
 		$this->checkDirection();
 
-		$file = $this->DIRECTORY . $user->getName() . '.txt';
+		$file = $this->DIRECTORY . $user->getLogin() . '.txt';
 
 		if (!file_exists($file))
 		{
@@ -278,24 +278,24 @@ class DataManager
 
 function test1(): void
 {
-	var_dump(UserManager::singUp(new User('BOB3', 'BOB11', 'qwerty')));
+	var_dump(UserManager::singUp(new User('BOB', 'BOB11', 'qwerty')));
 }
 
 function test2(): void
 {
-	var_dump(UserManager::signIn('BOB3', 'qwerty'));
+	var_dump(UserManager::signIn('BOB11', 'qwerty'));
 }
 
 function test3(): void
 {
-	var_dump(UserManager::signIn('BOB3'));
+	var_dump(UserManager::signIn('BOB11'));
 }
 
 function test4(): void
 {
-	var_dump(UserManager::signIn('BOB3'));
+	var_dump(UserManager::signIn('BOB11'));
 	var_dump(UserManager::signOut());
-	var_dump(UserManager::signIn('BOB3'));
+	var_dump(UserManager::signIn('BOB11'));
 }
 
-test1();
+test4();
