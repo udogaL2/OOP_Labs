@@ -9,6 +9,19 @@ class VirtualBoard
 
 	private static ?VirtualBoard $instance = null;
 
+	private static string $cancelButton = 'ctrZ';
+	private static ?string $lastButton = null;
+
+	public static function getCancelButton(): string
+	{
+		return self::$cancelButton;
+	}
+
+	public static function setCancelButton(string $cancelButton): void
+	{
+		self::$cancelButton = $cancelButton;
+	}
+
 	static public function getInstance(): VirtualBoard
 	{
 		if (!isset(self::$instance))
@@ -26,8 +39,14 @@ class VirtualBoard
 
 	public function pressButton(string $button): void
 	{
+		if ($button === self::$cancelButton && isset(self::$lastButton))
+		{
+			$this->buttonList[self::$lastButton]->cancel();
+		}
+
 		if (isset($this->buttonList[$button]))
 		{
+			self::$lastButton = $button;
 			$this->buttonList[$button]->execute();
 		}
 	}
@@ -42,11 +61,13 @@ class VirtualButton
 {
 	protected string $originalButton;
 	protected $executeFunction;
+	protected $cancelFunction;
 
-	public function __construct(string $originalButton, callable $executeFunction)
+	public function __construct(string $originalButton, callable $executeFunction, callable $cancelFunction = null)
 	{
 		$this->originalButton = $originalButton;
 		$this->executeFunction = $executeFunction;
+		$this->cancelFunction = $cancelFunction;
 	}
 
 	public function getOriginalButton(): string
@@ -58,11 +79,21 @@ class VirtualButton
 	{
 		($this->executeFunction)();
 	}
+
+	public function cancel(): void
+	{
+		if (!isset($this->cancelFunction) || !is_callable($this->cancelFunction))
+		{
+			return;
+		}
+
+		($this->cancelFunction)();
+	}
 }
 
 function start(): void
 {
-	VirtualBoard::getInstance()->addButton(new VirtualButton('a', function () { echo "Имитация замены клавиши a\n"; }));
+	VirtualBoard::getInstance()->addButton(new VirtualButton('a', function () { echo "Имитация замены клавиши a\n"; }, function () { echo "Отмена действия клавиши a\n"; }));
 	VirtualBoard::getInstance()->addButton(new VirtualButton('A', function () { echo "Имитация замены клавиши shift + a\n"; }));
 	VirtualBoard::getInstance()->addButton(new VirtualButton('e', function () { echo "Имитация замены клавиши e\n"; }));
 	VirtualBoard::getInstance()->addButton(new VirtualButton('E', function () { exec('explorer'); }));
