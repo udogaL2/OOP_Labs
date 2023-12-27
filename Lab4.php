@@ -10,7 +10,7 @@ class VirtualBoard
 	private static ?VirtualBoard $instance = null;
 
 	private static string $cancelButton = 'ctrZ';
-	private static ?string $lastButton = null;
+	private static array $lastButtonList = [];
 
 	public static function getCancelButton(): string
 	{
@@ -39,14 +39,14 @@ class VirtualBoard
 
 	public function pressButton(string $button): void
 	{
-		if ($button === self::$cancelButton && isset(self::$lastButton))
+		if ($button === self::$cancelButton && isset(self::$lastButtonList))
 		{
-			$this->buttonList[self::$lastButton]->cancel();
+			$this->buttonList[array_pop(self::$lastButtonList)]->cancel();
 		}
 
 		if (isset($this->buttonList[$button]))
 		{
-			self::$lastButton = $button;
+			self::$lastButtonList[] = $button;
 			$this->buttonList[$button]->execute();
 		}
 	}
